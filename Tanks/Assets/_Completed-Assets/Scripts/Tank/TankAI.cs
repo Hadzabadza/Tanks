@@ -74,7 +74,7 @@ namespace Complete
         // ACTION: fire a shell with a force between 0 and 1
         // 0: minimum force
         // 1: maximum force
-        private void Fire(float force) { 
+        private void Fire(float force) {
             m_Shooting.AIFire(force);
         }
 
