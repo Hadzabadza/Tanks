@@ -56,16 +56,21 @@ namespace Complete
 		private void CalculatePrediction(){
 			Vector3 targetPos = TargetTransform ().position; 
 			Vector3 localPos = this.transform.InverseTransformPoint (targetPos);
-			Vector3 localDir = this.transform.InverseTransformDirection (targetPos);
+
+			//double localDir = Mathf.Atan2 (localPos.normalized.x,localPos.normalized.z);
+			//float localDir = (TargetTransform().eulerAngles.y+360-Mathf.Atan2 (targetPos.y - this.transform.position.y, targetPos.x - this.transform.position.x))%360;
+			//float localDir=Mathf.Asin(localPos.normalized.x)*Mathf.Rad2Deg;
+
+			float localDir = (TargetTransform().eulerAngles.y+360-this.transform.eulerAngles.y)%360*Mathf.Deg2Rad;
 			Vector3 localVel = (targetPos - lastEnemyPos)/(Time.fixedTime-timeOfLastCheck);
 			float DTT = localPos.magnitude; //Distance to target
 			//float requiredSpd = Mathf.Sqrt (DTT* 15.0f); //Very simplified prediction model based on a constant elevated shot start point and a 10 degree angle
-			float requiredSpd = Mathf.Sqrt (DTT * 15.0f) + localVel.magnitude;// * Mathf.Cos (localDir);
+			float requiredSpd = Mathf.Sqrt (DTT * 15.0f) + localVel.magnitude * Mathf.Cos (localDir);
 
 			//TODO: add a prediction point ahead of target
 
 
-			Debug.Log ("Speed= " + requiredSpd+ "EnemySpeed= "+localVel.magnitude + "Direction= " +localDir);
+			Debug.Log ("Speed= " + requiredSpd+ " EnemySpeed= "+localVel.magnitude + " Direction= " +localDir);
 
 			float time = 0.0f;
 			if (requiredSpd > 25.0f)
@@ -125,7 +130,6 @@ namespace Complete
 			blackboard ["targetOnRight"] = heading.x > 0;
 			blackboard ["targetFarRight"] = heading.x > 0.08f;
 			blackboard ["targetFarLeft"] = heading.x < -0.08f;
-
 			blackboard ["targetOffCentre"] = Mathf.Abs (heading.x);
 		}
 	}
